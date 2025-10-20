@@ -1,5 +1,5 @@
 Name: monero-gui
-Version: 0.18.4.2
+Version: 0.18.4.3
 Release: 1%{?dist}
 Summary: Monero: the secure, private, untraceable cryptocurrency
 
@@ -9,7 +9,7 @@ Source0: https://github.com/monero-project/monero-gui/archive/refs/tags/v%{versi
 
 %{lua:
 local externals = {
-  { name="monero",        ref="d87edf5", owner="monero-project", path="", version="0.18.4.2", license="BSD-3-Clause" },
+  { name="monero",        ref="7c6e844", owner="monero-project", path="", version="0.18.4.3", license="BSD-3-Clause" },
   { name="quirc",         ref="7e7ab59", owner="dlbeer", path="../external/quirc", license="ISC License" },
   { name="miniupnp",      ref="544e6fc", owner="miniupnp", path="external/miniupnp", version="2.2.1", license="BSD-3-Clause" },
   { name="RandomX",       ref="102f8ac", owner="tevador", path="external/randomx", version="1.2.1", license="BSD-3-Clause" },

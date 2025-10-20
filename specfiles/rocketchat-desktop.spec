@@ -1,59 +1,26 @@
 Name: rocketchat-desktop
-Version: 4.6.0
-Release: 1%{?dist}
+Version: 4.9.1
+Release: %autorelease
 Summary: Desktop Client for Rocket.Chat
+
+%global electron_version 37.6.0
+
 
 License:  MIT
 URL:      https://github.com/RocketChat/Rocket.Chat.Electron
-Source0:  https://github.com/RocketChat/Rocket.Chat.Electron/archive/refs/tags/%{version}.tar.gz
-Source1:  rocketchat-desktop-4.6.0-yarn-cache.tar.xz
-Source2:  https://github.com/electron/electron/releases/download/v34.0.2/electron-v34.0.2-linux-arm64.zip
-Source3:  https://github.com/electron/electron/releases/download/v35.5.1/electron-v35.5.1-linux-arm64.zip
+Source0:  https://github.com/RocketChat/Rocket.Chat.Electron/archive/refs/tags//home/lm/.local/rpm/sources/rocketchat-desktop/Rocket.Chat.Electron-%{version}.tar.gz
+Source1:  rocketchat-desktop-%{version}-yarn-cache.tar.xz
+Source2:  https://github.com/electron/electron/releases/download/v%{electron_version}/electron-v%{electron_version}-linux-arm64.zip
 
+ExclusiveArch:  aarch64
 
 BuildRequires:  gcc-c++
-BuildRequires:  make
-BuildRequires:  gtk3-devel
-BuildRequires:  libX11-devel
-BuildRequires:  libXcomposite-devel
-BuildRequires:  libXdamage-devel
-BuildRequires:  libXrandr-devel
-BuildRequires:  libXext-devel
-BuildRequires:  libXtst-devel
-BuildRequires:  libXScrnSaver-devel
-BuildRequires:  libnotify-devel
-BuildRequires:  nss-devel
-BuildRequires:  rpm-build
-BuildRequires:  nodejs
 BuildRequires:  yarnpkg
-BuildRequires:  pkgconfig
-BuildRequires:  xdg-utils
-BuildRequires:  npm
 BuildRequires:  chromium
-BuildRequires:  xorg-x11-server-Xvfb
-BuildRequires:  vips
 BuildRequires:  vips-devel
-BuildRequires:  python3-devel
 BuildRequires:  nodejs-devel
-BuildRequires:  unzip
-# BuildRequires:  nodejs-electron
-# BuildRequires:  nodejs-electron-devel
 
-BuildRequires:  vips-devel
-BuildRequires:  vips-doc
-BuildRequires:  vips-heif
-BuildRequires:  vips-jxl
-BuildRequires:  vips-magick
-BuildRequires:  vips-openslide
-BuildRequires:  vips-poppler
-BuildRequires:  vips-tools
-
-
-
-
-
-Requires:       vips
-Requires:       python3
+Requires:       nodejs-electron >= %{electron_version}
 
 
 %description
@@ -62,15 +29,10 @@ Desktop client for Rocket.Chat.
 %prep
 %autosetup -n Rocket.Chat.Electron-%{version} -N -a 1
 sed -i '/downloadSupportedVersions()/d' rollup.config.mjs
-cp -p %{SOURCE2} electron-v34.0.2-linux-arm64.zip
-cp -p %{SOURCE3} electron.zip
 mkdir -p node_modules/electron
-unzip -q electron-v34.0.2-linux-arm64.zip -d node_modules/electron/
-unzip electron.zip
-rm electron.zip
+unzip -q %{SOURCE2} -d node_modules/electron/
 
 %build
-# Don't reach the Internet
 export ELECTRON_OVERRIDE_DIST_PATH=%{_bindir}/electron
 export ELECTRON_SKIP_BINARY_DOWNLOAD=1
 export PUPPETEER_SKIP_DOWNLOAD=1
@@ -79,24 +41,26 @@ export npm_config_nodedir=/usr/
 export npm_config_build_from_source=true
 
 yarn install --immutable --immutable-cache
-# optional: throw away dev deps to shrink the buildroot
-# yarn workspaces focus -A --production
 yarn postinstall
-
 yarn build
 
-rm electron-v34.0.2-linux-arm64.zip
 %install
 install -d -m 0755 %{buildroot}%{_bindir}
 
 cat << EOF > %{buildroot}%{_bindir}/%{name}
-#!/bin/sh
+#!/usr/bin/env sh
 export NODE_ENV=production
 
-exec electron %{_libexecdir}/%{name} "\$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/%{name}
+if [ "$XDG_SESSION_TYPE" = "wayland" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+  export ELECTRON_OZONE_PLATFORM_HINT=wayland
+else
+  export ELECTRON_OZONE_PLATFORM_HINT=x11
+fi
 
+exec /usr/bin/electron /usr/libexec/rocketchat-desktop "$@"
+EOF
+
+chmod +x %{buildroot}%{_bindir}/%{name}
 
 #icons
 for i in 16 32 48 64 128 256 512; do
@@ -118,20 +82,29 @@ MimeType=x-scheme-handler/rocketchat;
 Comment=Official OSX, Windows, and Linux Desktop Clients for Rocket.Chat
 Categories=GNOME;GTK;Network;InstantMessaging;
 EOF
+
 chmod +x %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 mkdir -pv %{buildroot}%{_libexecdir}
-cp -pr . %{buildroot}%{_libexecdir}/%{name}
+
+mkdir -p %{buildroot}%{_libexecdir}/%{name}
+cp -p package.json %{buildroot}%{_libexecdir}/%{name}/package.json
+cp -pr node_modules %{buildroot}%{_libexecdir}/%{name}/node_modules
+cp -pr app          %{buildroot}%{_libexecdir}/%{name}/app
+
+rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/7zip-bin/linux/arm/7za
+rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/7zip-bin/linux/ia32/7za
+rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/7zip-bin/linux/x64/7za
+rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/bare-fs/prebuilds/linux-x64/bare-fs.bare
+rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/bare-os/prebuilds/linux-x64/bare-os.bare
 
 
 #Remove development garbage
 cd %{buildroot}%{_libexecdir}/%{name}
-#JS debugging symbols
-find -name '*.map' -type f -print -delete
-#Source code
-rm -rf node_modules/@signalapp/libsignal-client/{bin,false,java,rust,swift,vendor,node,ts}
-rm -vf  node_modules/@signalapp/libsignal-client/build_node_bridge.py
 
+rm -rf %{buildroot}%{_libexecdir}/%{name}/node_modules/{app-builder-bin,electron,electron-builder,@electron/rebuild,@electron/get,puppeteer,playwright,ts-node,typescript,@typescript-eslint,eslint*,prettier,jest*,@jest,vitest,mocha,chai,nyc,rollup,webpack*,parcel*,node-gyp,prebuild-install,patch-package,lint-*,stylelint*,conventional-*,commitlint*,husky,vercel,es-abstract,app-builder-lib,builder-util,builder-util-runtime,dmg-builder,electron-devtools-installer,@octokit,babel-jest,babel-preset-jest,babel-plugin-istanbul,babel-plugin-jest-hoist,@istanbuljs,istanbul-lib-*,istanbul-reports,v8-to-istanbul,test-exclude,ts-jest,@types,tsutils,@tsconfig,tsconfig-paths,@eslint,@eslint-community,jsx-ast-utils,espree,esprima,doctrine,git-raw-commits,git-semver-tags,xvfb-maybe,electron-notarize,electron-publish,devtools-protocol,chromium-bidi,puppeteer-core,@puppeteer,7zip-bin,uglify-js,@rollup,rollup-plugin-copy,@actions}
+
+find -name '*.map' -type f -print -delete
 find -name '*.c' -type f -print -delete
 find -name '*.cpp' -type f -print -delete
 find -name '*.h' -type f -print -delete
@@ -149,12 +122,15 @@ find -name bower.json -type f -print -delete
 find -name composer.json -type f -print -delete
 find -name component.json -type f -print -delete
 find -name '*.patch' -type f -print -delete
+
 #Compile-time-only dependencies
 find -name nan -print0 |xargs -r0 -- rm -rvf --
 find -name node-addon-api -print0 |xargs -r0 -- rm -rvf --
 find -name test*.node -type f -print -delete
+
 #Bogus (empty) DLLs which cannot be loaded by node
 rm -rfv node_modules/@indutny/simple-windows-notifications/build/Release
+
 #Documentation
 find -name '*.markdown' -type f -print -delete
 find -name '*.bnf' -type f -print -delete
@@ -163,6 +139,7 @@ find -name CHANGES -type f -print -delete
 find -name TODO -type f -print -delete
 find -name docs -print0 |xargs -r0 -- rm -rvf --
 find -name usage.txt -type f -print -delete
+
 #Other garbage
 rm -rf build/icons
 rm -rf protos
@@ -203,8 +180,29 @@ find -name Dockerfile -type f -print -delete
 find -name docker-prebuildify.sh -type f -print -delete
 find -name justfile -type f -print -delete
 
-#Remove tests
-rm -rf ts/test-{both,electron,mock,node}
+find %{buildroot}%{_libexecdir}/%{name}/node_modules \
+  -type d \
+  \( -name test -o -name tests -o -name __tests__ -o -name example -o -name examples \
+     -o -name docs -o -name doc -o -name coverage -o -name benchmark -o -name benchmarks \
+     -o -name demo -o -name demos -o -name mac -o -name win \) \
+  -prune -exec rm -rf {} +
+
+find %{buildroot}%{_libexecdir}/%{name}/node_modules -type f \
+  \( -name '*.map' -o -name '*.d.ts' -o -name '*.d.mts' -o -name '*.tsbuildinfo' \) -delete
+
+find %{buildroot}%{_libexecdir}/%{name}/node_modules/sharp -type d -path '*/vendor/*' \
+  -not -path '*/vendor/8.*/linux-arm64*' -exec rm -rf {} + 2>/dev/null || true
+
+find %{buildroot}%{_libexecdir}/%{name}/node_modules -type d -path '*/prebuilds/*' \
+  -not -path '*/prebuilds/linux-arm64*' -exec rm -rf {} + 2>/dev/null || true
+
+find %{buildroot}%{_libexecdir}/%{name}/node_modules -type f -name '*.node' -print0 \
+  | xargs -0 -r file | grep -Ev 'ELF 64-bit.*aarch64' | cut -d: -f1 | xargs -r rm -f
+
+rm -rf %{buildroot}%{_libexecdir}/%{name}/node_modules/**/node_gyp_bins 2>/dev/null || true
+
+rm -rf %{buildroot}%{_libexecdir}/%{name}/app/images/tray/{darwin,win32} \
+       %{buildroot}%{_libexecdir}/%{name}/app/images/icon.ico
 
 
 %files
@@ -224,15 +222,5 @@ rm -rf ts/test-{both,electron,mock,node}
 %{_datadir}/applications/%{name}.desktop
 
 
-
-
 %changelog
-* Thu Jun 26 2025 Lachlan Marie <lchlnm@pm.me> - 4.6.0-1
-- Bumped version to 4.6.0
-
-* Sun Jun 08 2025 Lachlan Marie <lchlnm@pm.me> - 4.1.2-2
-- Restructured packaging process
-
-* Wed Jun 04 2025 Lachlan Marie <lchlnm@pm.me> - 4.1.2-1
-- Create /usr/bin before symlink
-- Sync Version/Changelog to 4.1.2
+%autochangelog
