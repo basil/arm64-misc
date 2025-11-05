@@ -12,7 +12,7 @@ Source1: proton-bridge-cli.3.21.1.tar.gz
 %global forgeurl   https://github.com/ProtonMail/proton-bridge
 %global tag        v%{version}
 
-%gometa -L -f      # generates Go metadata tables
+%gometa -L -f
 
 BuildRequires: gcc
 BuildRequires: pkgconfig
@@ -35,7 +35,6 @@ Proton Mail Bridge is a program that runs in the background, encrypting and decr
 export GOFLAGS='-mod=vendor -buildvcs=false'
 export GOPROXY=off GOSUMDB=off
 %gobuild -o %{name} %{goipath}/cmd/Desktop-Bridge
-# make build-nogui
 
 %install
 install -Dm0755 bridge %{buildroot}%{_bindir}/proton-bridge-cli

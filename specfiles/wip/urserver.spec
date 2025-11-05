@@ -1,5 +1,5 @@
 Name:           urserver
-Version:        3.13.0.2505
+Version:        3.13.0.2510
 Release:        1%{?dist}
 Summary:        Server for universal remote control
 
@@ -21,38 +21,30 @@ Server for universal remote control
 aunpack %{SOURCE1}
 rm -r linux-x64-rpm/usr/lib
 rm    linux-x64-rpm/opt/urserver/urserver
-mv    urserver                   linux-x64-rpm/opt/urserver
+mv    urserver linux-x64-rpm/opt/urserver
 
 %build
-# no build step for this package
 
 %install
-# install /opt and /usr trees
 cp -a linux-x64-rpm/opt    %{buildroot}/opt
 cp -a linux-x64-rpm/usr    %{buildroot}/usr
 
-# fix RPATH on the main binary
 patchelf --remove-rpath %{buildroot}/opt/urserver/urserver
 patchelf --set-rpath '$ORIGIN/../lib' %{buildroot}/opt/urserver/urserver
 
-# add symlink into user PATH
 mkdir -p %{buildroot}/usr/bin
 ln -s /opt/urserver/urserver %{buildroot}/usr/bin/urserver
 
 %files
 %defattr(-,root,root,0755)
 
-# core server files
 %dir /opt/urserver
 /opt/urserver/*
 
-# symlink in PATH
 %{_bindir}/urserver
 
-# desktop integration
 %{_datadir}/applications/urserver.desktop
 
-# icons
 %{_datadir}/pixmaps/urserver.png
 %{_datadir}/icons/urserver.png
 %{_datadir}/icons/hicolor/48x48/apps/urserver.png

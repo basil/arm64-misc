@@ -1,6 +1,6 @@
 Name:           rpcs3
 Version:        0.0.37
-Release:        %autorelease
+Release:        1%{?dist}
 Summary:        PlayStation 3 emulator and debugger
 
 License: GPLv2
@@ -58,73 +58,52 @@ end
 }
 
 
-# Core build tools
 BuildRequires:  cmake
 BuildRequires:  git
 BuildRequires:  ninja-build
 BuildRequires:  pkgconfig
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
-
-# System FFmpeg (shared) replaces RPCS3’s “download prebuilt” logic
 BuildRequires:  ffmpeg-free-devel
-
-# Qt6 for the GUI
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qttools-devel
-
-# X11 / Windowing
 BuildRequires:  libX11-devel
 BuildRequires:  libXrandr-devel
 BuildRequires:  glew-devel
-
-# Vulkan
 BuildRequires:  vulkan-devel
-
-# USB / HID / Controller support
 BuildRequires:  libudev-devel
 BuildRequires:  libusb1-devel
-
-# Audio backends
-#  - PulseAudio
 BuildRequires:  pulseaudio-libs-devel
-#  - OpenAL
 BuildRequires:  openal-soft-devel
-
-# Optional: Wayland client development (skip if you only need EGL/GL backend)
 BuildRequires:  wayland-devel
 BuildRequires:  wayland-protocols-devel
 BuildRequires:  egl-wayland-devel
 BuildRequires:  libwayland-egl
-
 BuildRequires:  libcurl-devel
 BuildRequires:  opencv-devel
 BuildRequires:  libzstd-devel
 BuildRequires:  git-all
-
 BuildRequires:  rtmidi-devel
-
-
-BuildRequires: alsa-lib-devel
-BuildRequires: cmake
-BuildRequires: ninja-build
-BuildRequires: glew
-BuildRequires: glew-devel
-BuildRequires: libatomic
-BuildRequires: libevdev-devel
-BuildRequires: libudev-devel
-BuildRequires: openal-soft-devel
-# BuildRequires: openal-devel
-BuildRequires: qt6-qtbase-devel
-BuildRequires: qt6-qtbase-private-devel
-BuildRequires: vulkan-devel
-BuildRequires: pipewire-jack-audio-connection-kit-devel
-# BuildRequires: jack-audio-connection-kit-devel
-BuildRequires: qt6-qtmultimedia-devel
-BuildRequires: qt6-qtsvg-devel
-BuildRequires: llvm-devel
-BuildRequires: SDL3-devel
-BuildRequires: doxygen
+BuildRequires:  alsa-lib-devel
+BuildRequires:  cmake
+BuildRequires:  ninja-build
+BuildRequires:  glew
+BuildRequires:  glew-devel
+BuildRequires:  libatomic
+BuildRequires:  libevdev-devel
+BuildRequires:  libudev-devel
+BuildRequires:  openal-soft-devel
+# BuildRequires:  openal-devel
+BuildRequires:  qt6-qtbase-devel
+BuildRequires:  qt6-qtbase-private-devel
+BuildRequires:  vulkan-devel
+BuildRequires:  pipewire-jack-audio-connection-kit-devel
+# BuildRequires:  jack-audio-connection-kit-devel
+BuildRequires:  qt6-qtmultimedia-devel
+BuildRequires:  qt6-qtsvg-devel
+BuildRequires:  llvm-devel
+BuildRequires:  SDL3-devel
+BuildRequires:  doxygen
 
 %description
 PlayStation 3 emulator and debugger
@@ -132,16 +111,11 @@ PlayStation 3 emulator and debugger
 %prep
 %autosetup
 
-# Unpack bundled libraries
 %{lua: print_setup_externals()}
 
-# find 3rdparty/rtmidi -type f -name 'CMakeLists.txt' -exec sed -i '/add_custom_target(uninstall/d' {} +
-# find 3rdparty/rtmidi -type f -name CMakeLists.txt -exec sed -i '/add_custom_target(uninstall/d' {} +
-# find 3rdparty -type f -name CMakeLists.txt -exec sed -i '/add_custom_target(uninstall/d' {} +
 sed -i "/^set(RTMIDI_TARGETNAME_UNINSTALL \"uninstall\" CACHE STRING \"Name of 'uninstall' build target\")\$/d" \
     3rdparty/rtmidi/CMakeLists.txt
 
-# Silence old-style-cast warnings in just sse2neon.h
 sed -i '1i#pragma GCC diagnostic push\n#pragma GCC diagnostic ignored "-Wold-style-cast"' \
       rpcs3/Emu/CPU/sse2neon.h
 echo '#pragma GCC diagnostic pop' \

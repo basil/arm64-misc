@@ -23,7 +23,7 @@ Source3:  %{name}-%{version}-bundled-licenses.txt
 A tool for downloading songs from music streaming services like Spotify and Apple Music.
 
 %prep
-%autosetup -q -n package        # upstream tarball (npm puts everything in ./package)
+%autosetup -q -n package
 cp %{SOURCE3}
 
 %build

@@ -61,13 +61,11 @@ EOF
 
 chmod +x %{buildroot}%{_bindir}/%{name}
 
-#icons
 for i in 16 32 48 64 128 256 512; do
     install -d -m 0755 %{buildroot}%{_datadir}/icons/hicolor/${i}x${i}/apps/
     install -pm 0644 build/icons/${i}x${i}.png %{buildroot}%{_datadir}/icons/hicolor/${i}x${i}/apps/%{name}.png
 done
 
-# desktop file
 install -d -m 0755 %{buildroot}%{_datadir}/applications/
 cat << EOF > %{buildroot}%{_datadir}/applications/%{name}.desktop
 [Desktop Entry]
@@ -98,7 +96,6 @@ rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/bare-fs/prebuilds/linux-
 rm -fr  %{buildroot}%{_libexecdir}/%{name}/node_modules/bare-os/prebuilds/linux-x64/bare-os.bare
 
 
-#Remove development garbage
 cd %{buildroot}%{_libexecdir}/%{name}
 
 rm -rf %{buildroot}%{_libexecdir}/%{name}/node_modules/{app-builder-bin,electron,electron-builder,@electron/rebuild,@electron/get,puppeteer,playwright,ts-node,typescript,@typescript-eslint,eslint*,prettier,jest*,@jest,vitest,mocha,chai,nyc,rollup,webpack*,parcel*,node-gyp,prebuild-install,patch-package,lint-*,stylelint*,conventional-*,commitlint*,husky,vercel,es-abstract,app-builder-lib,builder-util,builder-util-runtime,dmg-builder,electron-devtools-installer,@octokit,babel-jest,babel-preset-jest,babel-plugin-istanbul,babel-plugin-jest-hoist,@istanbuljs,istanbul-lib-*,istanbul-reports,v8-to-istanbul,test-exclude,ts-jest,@types,tsutils,@tsconfig,tsconfig-paths,@eslint,@eslint-community,jsx-ast-utils,espree,esprima,doctrine,git-raw-commits,git-semver-tags,xvfb-maybe,electron-notarize,electron-publish,devtools-protocol,chromium-bidi,puppeteer-core,@puppeteer,7zip-bin,uglify-js,@rollup,rollup-plugin-copy,@actions}
@@ -122,15 +119,12 @@ find -name composer.json -type f -print -delete
 find -name component.json -type f -print -delete
 find -name '*.patch' -type f -print -delete
 
-#Compile-time-only dependencies
 find -name nan -print0 |xargs -r0 -- rm -rvf --
 find -name node-addon-api -print0 |xargs -r0 -- rm -rvf --
 find -name test*.node -type f -print -delete
 
-#Bogus (empty) DLLs which cannot be loaded by node
 rm -rfv node_modules/@indutny/simple-windows-notifications/build/Release
 
-#Documentation
 find -name '*.markdown' -type f -print -delete
 find -name '*.bnf' -type f -print -delete
 find -name '*.mli' -type f -print -delete
@@ -139,7 +133,6 @@ find -name TODO -type f -print -delete
 find -name docs -print0 |xargs -r0 -- rm -rvf --
 find -name usage.txt -type f -print -delete
 
-#Other garbage
 rm -rf build/icons
 rm -rf protos
 rm -rf release

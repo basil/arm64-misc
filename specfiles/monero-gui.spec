@@ -82,7 +82,6 @@ Monero is a private, secure, untraceable, decentralised digital currency. You ar
 %prep
 %autosetup
 
-# Unpack bundled libraries
 %{lua: print_setup_externals()}
 
 

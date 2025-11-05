@@ -1,4 +1,4 @@
-Name: bluebubbles
+Name: bluebubbles-desktop
 Version: 1.15.4
 Release: %autorelease
 Summary: Messaging client for iMessage
@@ -33,5 +33,5 @@ tar -xf %{SOURCE0}
 
 
 %changelog
-* Thu May 29 2025 Lachlan Marie <lchlnm@pm.me> - #######
-- Initial RPM packaging of ########
+* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - 1.15.4
+- Initial RPM packaging of bluebubbles-desktop

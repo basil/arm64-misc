@@ -7,8 +7,6 @@ License:    MIT License
 URL:        https://github.com/nillerusr/source-engine
 Source0:    https://github.com/nillerusr/source-engine/archive/2998568.tar.gz
 
-# Bundled dependencies managed as git submodules upstream
-# These are too entangled with the build system to unbundle for now
 %{lua:
 local externals = {
   { name="source-physics", ref="4753347", owner="nillerusr", path="ivp", version="git",  license="SOURCE 1 SDK" },
@@ -56,7 +54,6 @@ BuildRequires:  openal-soft-devel
 %autosetup -n source-engine-29985681a18508e78dc79ad863952f830be237b6
 
 
-# Unpack bundled libraries
 %{lua: print_setup_externals()}
 
 

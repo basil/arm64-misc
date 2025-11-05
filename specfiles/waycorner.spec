@@ -21,7 +21,6 @@ Hot corners for Wayland. Create anchors in the corners of your monitors and exec
 %prep
 %autosetup -n %{name}-%{version} -p1 -a1
 %cargo_prep -v vendor
-# tar -xvf %{SOURCE1}
 
 
 %generate_buildrequires
@@ -32,10 +31,7 @@ Hot corners for Wayland. Create anchors in the corners of your monitors and exec
 
 %install
 %cargo_install
-# install -Dm0755 target/release/waycorner %{buildroot}%{_bindir}/waycorner
-# install -Dm644 LICENSE         %{buildroot}%{_licenses}/LICENSE
-# install -Dm644 README.md       %{buildroot}%{_docdir}/%{name}/README.md
-# install -Dm644 CHANGELOG.md    %{buildroot}%{_docdir}/%{name}/CHANGELOG.md
+
 
 %files
 %license LICENSE* cargo-vendor.txt

@@ -17,35 +17,30 @@ UltraLight Italic, Light, Light Italic, Medium, Medium Italic,
 Bold, Bold Italic, Heavy, Heavy Italic, Black, Black Italic.
 
 %prep
-# Prepare empty source directory
+
 %setup -q -c -T
-# Extract all font files without directory structure
 unzip -q -j %{SOURCE0} "*.otf" "*.ttf"
 
 %build
-# No build steps required
+
 
 %install
-# Create fonts directory in buildroot
 install -d %{buildroot}%{_datadir}/fonts/helvetica-neue
-# Install font files
 install -m 0644 *.otf *.ttf %{buildroot}%{_datadir}/fonts/helvetica-neue/
 
 %post
-# Rebuild font cache
 fc-cache -f -v >/dev/null 2>&1
 
 %postun
-# Rebuild font cache on uninstall
 fc-cache -f -v >/dev/null 2>&1
 
 %files
-# Font files
 %{_datadir}/fonts/helvetica-neue/*.otf
 %{_datadir}/fonts/helvetica-neue/*.ttf
 
 %changelog
 * Sun Jun 15 2025 Lachlan Marie <lchlnm@pm.me> - 5.0.0-1
+- Initial packaging of Helvetica Neue
 - Added %post/%postun to rebuild font cache
 - Added Requires(post)/(postun) for fontconfig
 - Cleaned up spec following packaging best practices
