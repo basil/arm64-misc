@@ -1,5 +1,5 @@
 Name:           rpcs3
-Version:        0.0.37
+Version:        0.0.38
 Release:        1%{?dist}
 Summary:        PlayStation 3 emulator and debugger
 
@@ -9,30 +9,31 @@ Source0:  https://github.com/RPCS3/rpcs3/archive/refs/tags/v%{version}.tar.gz
 
 %{lua:
 local externals = {
- { name="7zip", ref="e5431fa", owner="ip7z", path="7zip/7zip", version="24.09",  license="GNU-LGPL" },
- { name="FAudio", ref="6077ea7", owner="FNA-XNA", path="FAudio", version="25.05",  license="zlib" },
+ { name="7zip", ref="5e96a82", owner="ip7z", path="7zip/7zip", version="25.01",  license="GNU-LGPL" },
+ { name="FAudio", ref="8a87fdc", owner="FNA-XNA", path="FAudio", version="25.09",  license="zlib" },
  { name="VulkanMemoryAllocator", ref="1d8f600", owner="GPUOpen-LibrariesAndSDKs", path="GPUOpen/VulkanMemoryAllocator", version="3.3.0",  license="MIT" },
  { name="openal-soft", ref="dc7d705", owner="kcat", path="OpenAL/openal-soft", version="1.24.3",  license="PFFFT" },
  { name="soundtouch", ref="3982730", owner="RPCS3", path="SoundTouch/soundtouch/", version="2.4.0",  license="LGPLv2.1" },
  { name="asmjit", ref="416f735", owner="asmjit", path="asmjit/asmjit/", license="zlib" },
- { name="cubeb", ref="70b4e3d", owner="mozilla", path="cubeb/cubeb", license="ISC" },
- { name="curl", ref="4dacb79", owner="curl", path="curl/curl", version="8.14.0",  license="MIT" },
+ { name="cubeb", ref="e495bee", owner="mozilla", path="cubeb/cubeb", license="ISC" },
+ { name="curl", ref="11b9912", owner="curl", path="curl/curl", version="8.16.0",  license="MIT" },
  { name="discord-rpc", ref="3dc2c32", owner="Vestrel", path="discord-rpc/discord-rpc", license="MIT" },
+ { name="gamemode", ref="c54d6d4", owner="FeralInteractive", path="feralinteractive/feralinteractive", version="1.8.2", license="BSD-3-Clause" },
  { name="ffmpeg-core", ref="ec6367d", owner="RPCS3", path="ffmpeg", license="LGPLv2.1" },
  { name="flatbuffers", ref="595bf00", owner="google", path="flatbuffers", version="24.3.25",  license="Apache-v2" },
  { name="Fusion", ref="066d4a6", owner="xioTechnologies", path="fusion/fusion", version="1.2.8",  license="MIT" },
  { name="glslang", ref="fc9889c", owner="KhronosGroup", path="glslang/glslang", version="15.3.0",  license="BSD-3-Clause" },
  { name="hidapi", ref="f424236", owner="RPCS3", path="hidapi/hidapi", version="0.15.0",  license="GPLv3, BSD" },
- { name="libpng", ref="ea12796", owner="pnggroup", path="libpng/libpng", version="1.6.48",  license="PNGRLLv2" },
- { name="SDL", ref="945eb6d", owner="libsdl-org", path="libsdl-org/SDL", version="3.2.14",  license="zlib" },
- { name="libusb", ref="a61afe5", owner="libusb", path="libusb/libusb", version="1.0.28",  license="LGPLv2.1" },
+ { name="libpng", ref="2b97891", owner="pnggroup", path="libpng/libpng", version="1.6.50",  license="PNGRLLv2" },
+ { name="SDL", ref="a96677b", owner="libsdl-org", path="libsdl-org/SDL", version="3.2.22",  license="zlib" },
+ { name="libusb", ref="15a7ebb", owner="libusb", path="libusb/libusb", version="1.0.29",  license="LGPLv2.1" },
  { name="llvm-project", ref="cd70802", owner="llvm", path="llvm/llvm", version="19.1.7",  license="Apache-v2" },
  { name="miniupnp", ref="d66872e", owner="miniupnp", path="miniupnp/miniupnp", version="2.3.9",  license="BSD-3-Clause" },
- { name="opencv_minimal", ref="f76628f", owner="Megamouse", path="opencv/opencv", version="4.10.0" },
+ { name="opencv_minimal", ref="67f53c2", owner="Megamouse", path="opencv/opencv", version="4.12.0" },
  { name="pugixml", ref="ee86beb", owner="zeux", path="pugixml", version="1.15",  license="MIT" },
  { name="rtmidi", ref="1e5b499", owner="thestk", path="rtmidi", version="6.0.0",  license="MIT" },
  { name="stb", ref="013ac3b", owner="nothings", path="stblib/stb", license="MIT" },
- { name="wolfssl", ref="b077c81", owner="wolfSSL", path="wolfssl/wolfssl", version="5.8.0",  license="GPLv3" },
+ { name="wolfssl", ref="b077c81", owner="wolfSSL", path="wolfssl/wolfssl", version="5.8.2",  license="GPLv3" },
  { name="yaml-cpp", ref="456c68f", owner="RPCS3", path="yaml-cpp/yaml-cpp", version="0.5.3",  license="MIT" },
  { name="zlib", ref="51b7f2a", owner="madler", path="zlib/zlib", version="1.3.1",  license="zlib" },
  { name="zstd", ref="f8745da", owner="facebook", path="zstd/zstd", version="1.5.7",  license="GPLv2" },
@@ -188,6 +189,9 @@ DESTDIR=%{buildroot} ninja install
 
 
 %changelog
+* Mon Aug 11 2025 Lachlan Marie <lchlnm@pm.me> - 0.0.38-1
+- Updated to 0.0.38, increased versions of several sources
+
 * Mon Aug 11 2025 Lachlan Marie <lchlnm@pm.me> - 0.0.37-2
 - Updated how sources are organised and extracted.
 
