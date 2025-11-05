@@ -1,6 +1,6 @@
-%global bumpver 1
+%global bumpver 2
 
-%global commit 0ed27d47e7beaff6ef76dc6037e5147320dc8721
+%global commit 9f0475db683956d7e14432aa36c608c21459cb7f
 %{?commit:%global shortcommit %(c=%{commit}; echo ${c:0:7})}
 
 Name:       xray-16
@@ -18,7 +18,7 @@ local externals = {
   { name="GameSpy", ref="3e43480", owner="OpenXRay", path="GameSpy",  license="IGN" },
   { name="LuaJIT", ref="5a5cd82", owner="OpenXRay", path="LuaJIT", version="2.1",  license="MIT" },
   { name="gli", ref="779b99a", owner="g-truc", path="gli", version="0.8.2.0",  license="MIT" },
-  { name="imgui", ref="95e0472", owner="ocornut", path="imgui", version="v.1.94.5",  license="MIT" },
+  { name="imgui", ref="1d942eb", owner="ocornut", path="imgui", version="v.1.94.5",  license="MIT" },
   { name="luabind-deboostified", ref="8da131b", owner="OpenXRay", path="luabind", version="0.9",  license="MIT" },
   { name="sse2neon", ref="42eee28", owner="DLTcollab", path="sse2neon", version="1.8.0",  license="MIT" },
   { name="sse2rvv", ref="373f788", owner="pattonkan", path="sse2rvv", version="git",  license="MIT" },
@@ -102,5 +102,14 @@ Improved version of the X-Ray Engine, the game engine used in the world-famous S
 %{_datadir}/openxray/*
 
 %changelog
+* Wed Nov 06 2025 Lachlan Marie <lchlnm@pm.me> - git^2.git.9f0475d
+- Updated xray-16 git commit
+
+* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^1.git.0ed27d4
+- Updated xray-16 git commit
+
+* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^0.git.55a888c
+- Changed to spec to follow git commits
+
 * Fri Jul 25 2025 Lachlan Marie <lchlnm@pm.me> - git-1
 - Initial RPM packaging of OpenXRay
