@@ -1,25 +1,28 @@
+%global bumpver 1
+
+%global commit 0ed27d47e7beaff6ef76dc6037e5147320dc8721
+%{?commit:%global shortcommit %(c=%{commit}; echo ${c:0:7})}
+
 Name:       xray-16
-Version:    git
-Release:    1%{?dist}
+Version:    git%{?bumpver:^%{bumpver}.git.%{shortcommit}}
+Release:    %autorelease
 Summary:    Open Source XRay engine for S.T.A.L.K.E.R.
 
 License:    MIT License
 URL:        https://github.com/OpenXRay/xray-16
-Source0:    https://github.com/OpenXRay/xray-16/archive/55a888c.tar.gz
+Source0:    https://github.com/OpenXRay/xray-16/archive/%{commit}/xray-16-%{commit}.tar.gz
 
-# Bundled dependencies managed as git submodules upstream
-# These are too entangled with the build system to unbundle for now
 %{lua:
 local externals = {
   { name="AGS_SDK", ref="5d8812d", owner="GPUOpen-LibrariesAndSDKs", path="AGS_SDK", version="6.3.0",  license="AMD" },
-  { name="GameSpy", ref="61d061b", owner="OpenXRay", path="GameSpy",  license="IGN" },
+  { name="GameSpy", ref="3e43480", owner="OpenXRay", path="GameSpy",  license="IGN" },
   { name="LuaJIT", ref="5a5cd82", owner="OpenXRay", path="LuaJIT", version="2.1",  license="MIT" },
   { name="gli", ref="779b99a", owner="g-truc", path="gli", version="0.8.2.0",  license="MIT" },
-  { name="imgui", ref="44aa9a4", owner="ocornut", path="imgui", version="v.1.92.1",  license="MIT" },
-  { name="luabind-deboostified", ref="dd3db67", owner="OpenXRay", path="luabind", version="0.9",  license="MIT" },
-  { name="sse2neon", ref="6abd463", owner="DLTcollab", path="sse2neon", version="1.8.0",  license="MIT" },
-  { name="sse2rvv", ref="f3a1d7d", owner="pattonkan", path="sse2rvv", version="git",  license="MIT" },
-  { name="xrLuaFix", ref="67b77c9", owner="OpenXRay", path="xrLuaFix", version="git",  license="BSD-3" },
+  { name="imgui", ref="95e0472", owner="ocornut", path="imgui", version="v.1.94.5",  license="MIT" },
+  { name="luabind-deboostified", ref="8da131b", owner="OpenXRay", path="luabind", version="0.9",  license="MIT" },
+  { name="sse2neon", ref="42eee28", owner="DLTcollab", path="sse2neon", version="1.8.0",  license="MIT" },
+  { name="sse2rvv", ref="373f788", owner="pattonkan", path="sse2rvv", version="git",  license="MIT" },
+  { name="xrLuaFix", ref="0e89050", owner="OpenXRay", path="xrLuaFix", version="git",  license="BSD-3" },
   { name="jenkins-ctest-plugin", ref="63a4a82", owner="rpavlik", path="luabind/test/jenkins-ctest-plugin", version="git",  license="MIT" },
   { name="luafilesystem", ref="314c0d0", owner="OpenXRay", path="xrLuaFix/lfs", version="git",  license="MIT" },
   { name="lua-marshal", ref="983a3bf", owner="OpenXRay", path="xrLuaFix/lua-marshal", version="git",  license="MIT" },
@@ -65,11 +68,9 @@ BuildRequires:  lzo-devel
 %description
 Improved version of the X-Ray Engine, the game engine used in the world-famous S.T.A.L.K.E.R. game series by GSC Game World. Join OpenXRay!
 
-
 %prep
-%autosetup -n xray-16-55a888c252cd815a0ea07439fc97cd954f2e34f0
+%autosetup -n xray-16-%{commit}
 
-# Unpack bundled libraries
 %{lua: print_setup_externals()}
 
 
@@ -99,8 +100,6 @@ Improved version of the X-Ray Engine, the game engine used in the world-famous S
 
 %dir %{_datadir}/openxray
 %{_datadir}/openxray/*
-
-%{_libdir}/xrLuabind.a
 
 %changelog
 * Fri Jul 25 2025 Lachlan Marie <lchlnm@pm.me> - git-1
