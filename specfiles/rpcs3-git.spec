@@ -1,12 +1,15 @@
-%global bumpver 9
+%global bumpver 10
 
-%global commit 7f6842705ce376587c6062d1471118b7b75ffa76
+%global commit a3f7c0d67f7b2aee900201952793fabd15d17903
 %{?commit:%global shortcommit %(c=%{commit}; echo ${c:0:7})}
 
 Name:       rpcs3-git
 Version:    0.0.38%{?bumpver:^%{bumpver}.git.%{shortcommit}}
-Release:    %autorelease
+Release:    1%{dist}
 Summary:    PlayStation 3 emulator and debugger
+
+Conflicts:      rpcs3
+Provides:       rpcs3
 
 License:  GPLv2
 URL:      https://github.com/RPCS3/rpcs3
@@ -111,9 +114,6 @@ BuildRequires:  llvm-devel
 BuildRequires:  SDL3-devel
 BuildRequires:  doxygen
 
-Conflicts:      rpcs3
-Provides:       rpcs3
-
 %description
 PlayStation 3 emulator and debugger
 
@@ -197,6 +197,9 @@ DESTDIR=%{buildroot} ninja install
 
 
 %changelog
+* Sun Nov 23 2025 Lachlan Marie <lchlnm@pm.me> - 0.0.38^10.git.a3f7c0d-1
+ - Update to commit a3f7c0d67f7b2aee900201952793fabd15d17903
+
 * Sat Nov 22 2025 Lachlan Marie <lchlnm@pm.me> - 0.0.38^9.git.7f68427-1
  - Update to commit 7f6842705ce376587c6062d1471118b7b75ffa76
 
