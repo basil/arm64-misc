@@ -4,48 +4,69 @@
 Name:           %{fontname}-fonts
 Version:        18.4
 Release:        1%{?dist}
-Summary:        A symbol font
+Summary:        Apple Color Emoji font
 
-License:        LicenseRef-Fedora-UltraPermissive
+License:        LicenseRef-Apple-Emoji
 URL:            https://github.com/samuelngs/apple-emoji-linux
 Source0:        https://github.com/samuelngs/apple-emoji-linux/archive/refs/tags/v%{version}.tar.gz
 Source1:        %{name}-fontconfig.conf
 Source2:        %{fontname}.metainfo.xml
 
 BuildArch:      noarch
+
+BuildRequires:  make
+BuildRequires:  python3-pillow
 BuildRequires:  fontpackages-devel
-BuildRequires:  libappstream-glib
-Requires:       fontpackages-filesystem
+BuildRequires:  optipng
+BuildRequires:  zopfli
+BuildRequires:  pngquant
+BuildRequires:  ImageMagick
+BuildRequires:  nototools
+BuildRequires:  fonttools
 
 %description
+Apple-style color emoji font compiled from PNG assets using the
+apple-emoji-linux build system. This package ships only the resulting
+AppleColorEmoji.ttf, suitable for desktop use.
 
 %prep
-%setup -q -c
+%autosetup -n apple-emoji-linux-%{version}
 
 %build
+%make_build
 
 %install
-install -m 0755 -d %{buildroot}%{_fontdir}
-install -m 0644 -p Symbola.ttf %{buildroot}%{_fontdir}
+rm -rf %{buildroot}
 
-install -m 0755 -d %{buildroot}%{_fontconfig_templatedir} \
-                   %{buildroot}%{_fontconfig_confdir}
+# Install the font
+install -m 0755 -d %{buildroot}%{_fontdir}/%{fontname}
+install -m 0644 -p AppleColorEmoji.ttf \
+    %{buildroot}%{_fontdir}/%{fontname}/AppleColorEmoji.ttf
 
+# fontconfig snippet (Source1)
+install -m 0755 -d %{buildroot}%{_datadir}/fontconfig/conf.avail
+install -m 0755 -d %{buildroot}%{_datadir}/fontconfig/conf.d
 install -m 0644 -p %{SOURCE1} \
-        %{buildroot}%{_fontconfig_templatedir}/%{fontconf}
-ln -s %{_fontconfig_templatedir}/%{fontconf} \
-      %{buildroot}%{_fontconfig_confdir}/%{fontconf}
+    %{buildroot}%{_datadir}/fontconfig/conf.avail/%{fontconf}
+ln -s ../conf.avail/%{fontconf} \
+    %{buildroot}%{_datadir}/fontconfig/conf.d/%{fontconf}
 
-install -Dm 0644 -p %{SOURCE2} \
-        %{buildroot}%{_datadir}/metainfo/%{fontname}.metainfo.xml
+# AppStream metainfo (Source2)
+install -m 0755 -d %{buildroot}%{_metainfodir}
+install -m 0644 -p %{SOURCE2} \
+    %{buildroot}%{_metainfodir}/%{fontname}.metainfo.xml
 
 %check
 appstream-util validate-relax --nonet \
-      %{buildroot}/%{_datadir}/metainfo/%{fontname}.metainfo.xml
+      %{buildroot}/%{_metainfodir}/%{fontname}.metainfo.xml
 
+%files
+%doc README.md
+%{_metainfodir}/%{fontname}.metainfo.xml
+%{_datadir}/fontconfig/conf.avail/%{fontconf}
+%{_datadir}/fontconfig/conf.d/%{fontconf}
+%{_fontdir}/%{fontname}/AppleColorEmoji.ttf
 
-%_font_pkg -f %{fontconf} Symbola.ttf
-%{_datadir}/metainfo/%{fontname}.metainfo.xml
-%doc Symbola.pdf Symbola.odt
-
-%autochangelog
+%changelog
+* Sat Nov 22 2025 Lachlan Marie <lchlnm@pm.me> - 18.4-1
+- Initial packaging for apple-emoji-fonts
