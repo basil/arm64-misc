@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+echo "==> Start AutoBuild
+"
 
-export BUILD_CMD=(mx-rpm -c "$COPR")
 export SPECFILE="$(realpath "$1")"
+export BUILD_CMD="mx-rpm --copr $COPR"
 export BRANCH="HEAD"
-
 
 export NAME=$(rpmspec -P "$SPECFILE" | awk '/^Name:/ {print $2; exit}')
 export VERSION=$(rpmspec -P "$SPECFILE" | awk '/^Version:/ {print $2; exit}')
@@ -15,37 +16,33 @@ case "$SRC0" in
     *)             REPO_URL="${SRC0%/*}" ;;
 esac
 
-
 echo "-----------------------------------------------------------------------------------"
-echo "  SPECFILE:     $SPECFILE"
-echo "  NVR:          $NAME-$VERSION"
-echo "  BASE URL:     $REPO_URL"
-echo
-
+echo "==> SPECFILE:     $SPECFILE"
+echo "==> NVR:          $NAME-$VERSION"
+echo "==> BASE URL:     $REPO_URL"
+echo "==> COPR REPO:    $COPR
+"
 export current_commit=$(grep -E '^%global[[:space:]]+commit[[:space:]]+' "$SPECFILE" | awk '{print $3}')
 if [[ -z "${current_commit:-}" ]]; then
-    echo "No commit found in specfile — exiting." >&2
+    echo "==> No commit found in specfile — exiting." >&2
     exit 1
 fi
 
 export latest_commit=$(git ls-remote "$REPO_URL" "$BRANCH" | awk '{print $1}')
 if [[ -z "${latest_commit:-}" ]]; then
-    echo "Failed to get latest commit from $REPO_URL $BRANCH" >&2
+    echo "==> Failed to get latest commit from $REPO_URL $BRANCH" >&2
     exit 1
 fi
 
 if [[ "$latest_commit" == "$current_commit" ]]; then
-    echo "No new upstream commit (still $current_commit). Nothing to do."
+    echo "==> No new upstream commit (still $current_commit). Nothing to do."
     exit 0
 fi
 
-echo "New commit detected:"
-echo "  old: $current_commit"
-echo "  new: $latest_commit"
-echo
-
-# Update the %global commit line in-place
-# (expects hex SHA-1; adjust regex if you use something else)
+echo "==> New commit detected:"
+echo "==>   old: $current_commit"
+echo "==>   new: $latest_commit
+"
 perl -pi -e '
     if (/^%global\s+commit\s+[0-9a-f]{7,40}\s*$/) {
         s/([0-9a-f]{7,40})/'"$latest_commit"'/;
@@ -60,13 +57,13 @@ perl -pi -e '
   }
 ' "$SPECFILE"
 
-NVR=$(rpmspec -q --srpm --qf '%{version}-%{release}\n' "$SPECFILE" | head -n1)
-NVR=${NVR%.*}
+VR=$(rpmspec -q --srpm --qf '%{version}-%{release}\n' "$SPECFILE" | head -n1)
+VR=${VR%.*}
 
 entry=$(printf '* %s %s - %s\n - Update to commit %s\n' \
     "$(LC_ALL=C date '+%a %b %d %Y')" \
     "$(rpmdev-packager)" \
-    "$NVR" \
+    "$VR" \
     "$latest_commit")
 
 ENTRY="$entry" perl -0pi -e '
@@ -74,6 +71,7 @@ ENTRY="$entry" perl -0pi -e '
     s/^(%changelog\s*\n)/$1$entry\n/m;
 ' "$SPECFILE"
 
-echo "Running build: ${BUILD_CMD[*]}"
-echo
-"${BUILD_CMD}" $SPECFILE
+echo "==> Running AutoBuild: "${BUILD_CMD}" $SPECFILE"
+echo "-----------------------------------------------------------------------------------
+"
+$BUILD_CMD $SPECFILE
