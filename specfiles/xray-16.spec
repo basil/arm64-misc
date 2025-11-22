@@ -5,12 +5,12 @@
 
 Name:       xray-16
 Version:    git%{?bumpver:^%{bumpver}.git.%{shortcommit}}
-Release:    %autorelease
+Release:    3%{?dist}
 Summary:    Open Source XRay engine for S.T.A.L.K.E.R.
 
 License:    MIT License
 URL:        https://github.com/OpenXRay/xray-16
-Source0:    https://github.com/OpenXRay/xray-16/archive/%{shortcommit}/xray-16-%{commit}.tar.gz
+Source0:    https://github.com/OpenXRay/xray-16/archive/%{shortcommit}/xray-16-%{shortcommit}.tar.gz
 
 %{lua:
 local externals = {
@@ -18,7 +18,7 @@ local externals = {
   { name="GameSpy", ref="3e43480", owner="OpenXRay", path="GameSpy",  license="IGN" },
   { name="LuaJIT", ref="5a5cd82", owner="OpenXRay", path="LuaJIT", version="2.1",  license="MIT" },
   { name="gli", ref="779b99a", owner="g-truc", path="gli", version="0.8.2.0",  license="MIT" },
-  { name="imgui", ref="4fa59df9fa20e4e2212070c5b1bc6cc52237093f", owner="ocornut", path="imgui", version="v.1.94.5",  license="MIT" },
+  { name="imgui", ref="4fa59df", owner="ocornut", path="imgui", version="v.1.94.5",  license="MIT" },
   { name="luabind-deboostified", ref="8da131b", owner="OpenXRay", path="luabind", version="0.9",  license="MIT" },
   { name="sse2neon", ref="42eee28", owner="DLTcollab", path="sse2neon", version="1.8.0",  license="MIT" },
   { name="sse2rvv", ref="373f788", owner="pattonkan", path="sse2rvv", version="git",  license="MIT" },
@@ -102,13 +102,16 @@ Improved version of the X-Ray Engine, the game engine used in the world-famous S
 %{_datadir}/openxray/*
 
 %changelog
-* Thu Nov 06 2025 Lachlan Marie <lchlnm@pm.me> - git^2.git.9f0475d
+* Fri Nov 21 2025 Lachlan Marie <lchlnm@pm.me> - git^9.git.831186f-3
+- Shortened commit length in xray source URL.
+
+* Thu Nov 06 2025 Lachlan Marie <lchlnm@pm.me> - git^2.git.9f0475d-2
 - Updated xray-16 git commit
 
-* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^1.git.0ed27d4
+* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^1.git.0ed27d4-2
 - Updated xray-16 git commit
 
-* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^0.git.55a888c
+* Wed Nov 05 2025 Lachlan Marie <lchlnm@pm.me> - git^0.git.55a888c-2
 - Changed to spec to follow git commits
 
 * Fri Jul 25 2025 Lachlan Marie <lchlnm@pm.me> - git-1
