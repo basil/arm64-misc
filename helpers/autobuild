@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-echo "==> Start AutoBuild
+echo "==> Start AutoBuild ----------------------------------------------------------------
 "
 
 export SPECFILE="$(realpath "$1")"
@@ -16,7 +16,6 @@ case "$SRC0" in
     *)             REPO_URL="${SRC0%/*}" ;;
 esac
 
-echo "-----------------------------------------------------------------------------------"
 echo "==> SPECFILE:     $SPECFILE"
 echo "==> NVR:          $NAME-$VERSION"
 echo "==> BASE URL:     $REPO_URL"
@@ -24,18 +23,21 @@ echo "==> COPR REPO:    $COPR
 "
 export current_commit=$(grep -E '^%global[[:space:]]+commit[[:space:]]+' "$SPECFILE" | awk '{print $3}')
 if [[ -z "${current_commit:-}" ]]; then
-    echo "==> No commit found in specfile — exiting." >&2
+    echo "==> No commit found in specfile — exiting."; echo "------------------------------------------------------------------------------------
+" >&2
     exit 1
 fi
 
 export latest_commit=$(git ls-remote "$REPO_URL" "$BRANCH" | awk '{print $1}')
 if [[ -z "${latest_commit:-}" ]]; then
-    echo "==> Failed to get latest commit from $REPO_URL $BRANCH" >&2
+    echo "==> Failed to get latest commit from $REPO_URL $BRANCH"; echo "------------------------------------------------------------------------------------
+" >&2
     exit 1
 fi
 
 if [[ "$latest_commit" == "$current_commit" ]]; then
-    echo "==> No new upstream commit (still $current_commit). Nothing to do."
+    echo "==> No new upstream commit (still $current_commit). Nothing to do."; echo "------------------------------------------------------------------------------------
+"
     exit 0
 fi
 
@@ -72,6 +74,7 @@ ENTRY="$entry" perl -0pi -e '
 ' "$SPECFILE"
 
 echo "==> Running AutoBuild: "${BUILD_CMD}" $SPECFILE"
-echo "-----------------------------------------------------------------------------------
-"
+
 $BUILD_CMD $SPECFILE
+echo "------------------------------------------------------------------------------------
+"
