@@ -43,6 +43,7 @@ BuildRequires:  python3-wheel
 BuildRequires:  python3-xlib
 BuildRequires:  python3-pyzstd
 BuildRequires:  python3-vdf
+BuildRequires:  python3-hatch-vcs
 BuildRequires:  cargo
 
 # Can't use these yet, F41 doesn't ship urllib3 >= 2.0 needed
@@ -94,7 +95,7 @@ EOF
 %build
 # Update this when fedora ships urllib3 >= 2.0
 #./configure.sh --prefix=/usr --use-system-pyzstd --use-system-urllib
-./configure.sh --prefix=/usr --use-system-pyzstd --use-system-vdf
+./configure.sh --prefix=/usr --use-system-pyzstd --use-system-vdf --use-system-urllib
 make
 
 %install
