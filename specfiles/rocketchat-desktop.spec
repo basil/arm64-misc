@@ -1,14 +1,14 @@
 Name: rocketchat-desktop
-Version: 4.9.2
+Version: 4.10.0
 Release: %autorelease
 Summary: Desktop Client for Rocket.Chat
 
-%global electron_version 37.6.0
+%global electron_version 39.2.5
 
 
 License:  MIT
 URL:      https://github.com/RocketChat/Rocket.Chat.Electron
-Source0:  https://github.com/RocketChat/Rocket.Chat.Electron/archive/refs/tags/Rocket.Chat.Electron-%{version}.tar.gz
+Source0:  https://github.com/RocketChat/Rocket.Chat.Electron/archive/refs/tags/%{version}.tar.gz
 Source1:  Rocket.Chat.Electron-%{version}-yarn-cache.tar.xz
 Source2:  https://github.com/electron/electron/releases/download/v%{electron_version}/electron-v%{electron_version}-linux-arm64.zip
 
