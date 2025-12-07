@@ -8,7 +8,7 @@
 Name:        umu-launcher-git
 Conflicts:   umu-launcher
 Provides:    umu-launcher
-Version:     %{?bumpver:%{bumpver}.git.%{shortcommit}}
+Version:     %{tag}%{?bumpver:^%{bumpver}.git.%{shortcommit}}
 Release:     1%{?dist}
 Summary:     A tool for launching non-steam games with proton
 
@@ -19,7 +19,7 @@ License:        GPLv3
 URL:            https://github.com/Open-Wine-Components/%{_name}
 Source0:        %{url}/archive/%{shortcommit}/%{_name}-%{shortcommit}.tar.gz
 Source1:        https://github.com/urllib3/urllib3/releases/download/%{urllib3}/urllib3-%{urllib3}.tar.gz
-Source2:        umu-launcher-vendor-4ed61d1.tar.zst
+Source2:        umu-launcher-vendor-%{tag}.tar.gz
 
 BuildArch:      x86_64 aarch64
 BuildRequires:  meson >= 0.54.0
