@@ -8,7 +8,7 @@
 Name:        umu-launcher-git
 Conflicts:   umu-launcher
 Provides:    umu-launcher
-Version:     %{tag}%{?bumpver:^%{bumpver}.git.%{shortcommit}}
+Version:     %{?bumpver:%{bumpver}.git.%{shortcommit}}
 Release:     1%{?dist}
 Summary:     A tool for launching non-steam games with proton
 
