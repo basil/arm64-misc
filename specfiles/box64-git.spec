@@ -30,10 +30,12 @@ BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  perl-podlators
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  alternatives
 
 # box64 only supports these architectures
 ExclusiveArch:  aarch64 riscv64 ppc64le %{x86_64}
 
+Requires:       alternatives
 Requires:       %{_name}-data = %{version}-%{release}
 # These should not be pulled in on x86_64 as they can cause a loop and prevent
 # any binary from successfully executing (#2344770)
@@ -152,7 +154,7 @@ install -Dpm0755 -t %{buildroot}%{_bindir} \
   %{_name}.asahi
 
 %post
-%{_sbindir}/update-alternatives --install %{_bindir}/%{_name} \
+%{_sbindir}/update-alternatives --auto --install %{_bindir}/%{_name} \
   %{_name} %{_bindir}/%{_name}.aarch64 10
 
 %postun
@@ -161,8 +163,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %post asahi
-%{_sbindir}/update-alternatives --install %{_bindir}/%{_name} \
-  %{_name} %{_bindir}/%{_name}.asahi 20
+%{_sbindir}/update-alternatives --auto --install %{_bindir}/%{_name} \
+  %{_name} %{_bindir}/%{_name}.asahi 200
 
 %postun asahi
 if [ $1 -eq 0 ] ; then
