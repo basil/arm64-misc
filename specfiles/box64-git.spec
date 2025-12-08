@@ -6,7 +6,7 @@
 
 Name:           %{_name}-git
 Conflicts:      %{_name}
-Provides:       %{_name}
+Provides:       %{_name} = %{version}-%{release}
 Version:        0.3.8%{?bumpver:^%{bumpver}.git.%{shortcommit}}
 Release:        1%{?dist}
 Summary:        Linux userspace x86_64 emulator with a twist, targeted at ARM64
@@ -38,7 +38,7 @@ Requires:       %{_name}-data = %{version}-%{release}
 # These should not be pulled in on x86_64 as they can cause a loop and prevent
 # any binary from successfully executing (#2344770)
 %ifnarch %{x86_64}
-Recommends:     %{_name}-binfmts = %{version}-%{release}
+Recommends:     %{name}-binfmts = %{version}-%{release}
 %endif
 %ifarch aarch64
 Requires(post): %{_sbindir}/update-alternatives
@@ -47,16 +47,18 @@ Requires(postun): %{_sbindir}/update-alternatives
 
 %description    %{common_description}
 
-%package        data
+%package        -n box64-data
+Provides:       box64-data = %{version}-%{release}
 Summary:        Common files for %{_name}
 BuildArch:      noarch
-
-%description    data %{common_description}
+%description    -n box64-data %{common_description}
 
 This package provides common data files for box64.
 
 %ifnarch %{x86_64}
 %package        binfmts
+Conflicts:      box64-binfmts
+Provides:       box64-binfmts = %{version}-%{release}
 Summary:        binfmt_misc handler configurations for box64
 
 %description    binfmts %{common_description}
@@ -67,6 +69,8 @@ execute x86_64 binaries.
 
 %ifarch aarch64
 %package        asahi
+Conflicts:      box64-asahi
+Provides:       box64-asahi = %{version}-%{release}
 Summary:        Apple Silicon version of box64
 
 Requires:       %{_name}-data = %{version}-%{release}
@@ -149,7 +153,7 @@ install -Dpm0755 -t %{buildroot}%{_bindir} \
 
 %post
 %{_sbindir}/update-alternatives --install %{_bindir}/%{_name} \
-  %{_name} %{_bindir}/%{_name}.aarch64 20
+  %{_name} %{_bindir}/%{_name}.aarch64 10
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -158,7 +162,7 @@ fi
 
 %post asahi
 %{_sbindir}/update-alternatives --install %{_bindir}/%{_name} \
-  %{_name} %{_bindir}/%{_name}.asahi 10
+  %{_name} %{_bindir}/%{_name}.asahi 20
 
 %postun asahi
 if [ $1 -eq 0 ] ; then
@@ -186,7 +190,7 @@ fi
 %{_bindir}/%{_name}.asahi
 %endif
 
-%files data
+%files -n box64-data
 %license LICENSE
 %doc README.md
 %doc %lang(cn) README_CN.md
