@@ -1,5 +1,5 @@
 Name:       rocketchat-desktop
-Version:    4.10.1
+Version:    4.10.0
 Release:    2%{?dist}
 Summary:    Desktop Client for Rocket.Chat
 
