@@ -1,7 +1,7 @@
-Name: rocketchat-desktop
-Version: 4.10.1
-Release: %autorelease
-Summary: Desktop Client for Rocket.Chat
+Name:       rocketchat-desktop
+Version:    4.10.1
+Release:    2%{?dist}
+Summary:    Desktop Client for Rocket.Chat
 
 %global electron_version 39.2.5
 
@@ -22,7 +22,7 @@ BuildRequires:  nodejs-devel
 BuildRequires:  python3-devel
 BuildRequires:  python3dist(setuptools)
 
-Requires:       nodejs-electron >= %{electron_version}
+Requires:       nodejs-electron
 
 
 %description
