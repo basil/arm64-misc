@@ -19,6 +19,10 @@ Source3:  %{name}-%{version}-bundled-licenses.txt
 # BuildRequires:
 # BuildRequires:
 
+Requires: python >= 3.2
+Requires: nodejs
+Requires: AtomicParsley
+
 %description
 A tool for downloading songs from music streaming services like Spotify and Apple Music.
 
