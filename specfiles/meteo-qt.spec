@@ -6,14 +6,12 @@ Release:        %autorelease
 Group:          Graphical desktop/Other
 Summary:        Weather status system tray application
 License:        GPLv3
-URL:            https://github.com/dglent/meteo-qt
-Source0:        https://github.com/dglent/meteo-qt/archive/refs/tags/v%{version}.tar.gz
+URL:            https://github.com/dglent/%{name}
+Source0:        https://github.com/dglent/%{name}/archive/refs/tags/v%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python3-qt5-devel
-BuildRequires:  qt5-qttools
 BuildRequires:  python3-pyqt6-base
 BuildRequires:  qt6-qttools
-BuildRequires:  qt5-linguist
 BuildRequires:  qt6-linguist
 
 
@@ -39,8 +37,8 @@ sed -i 's/lrelease-pro-qt6/lrelease-qt6/' setup.py
 %pyproject_save_files meteo_qt   # produces %%{pyproject_files}
 
 install -Dm0644 \
-  %{buildroot}%{python3_sitelib}/usr/share/applications/meteo-qt.desktop \
-  %{buildroot}%{_datadir}/applications/meteo-qt.desktop
+  %{buildroot}%{python3_sitelib}/usr/share/applications/%{name}.desktop \
+  %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 install -Dm0644 \
   %{buildroot}%{python3_sitelib}/usr/share/icons/weather-few-clouds.png \
@@ -57,8 +55,8 @@ rm -rf %{buildroot}%{python3_sitelib}/usr
 %license LICENSE
 %doc README.md
 
-%{_bindir}/meteo-qt
-%{_datadir}/applications/meteo-qt.desktop
+%{_bindir}/%{name}
+%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/weather-few-clouds.png
 
 %dir %{_datadir}/meteo_qt
